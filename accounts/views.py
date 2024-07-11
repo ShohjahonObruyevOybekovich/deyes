@@ -27,9 +27,9 @@ class RegisterView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        first_name = serializer.data['first_name']
-        last_name = serializer.data['last_name']
-        username = serializer.data['username']
+        first_name = serializer.validated_data['first_name']
+        last_name = serializer.validated_data['last_name']
+        username = serializer.validated_data['username']
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
         confirm_password = serializer.validated_data['confirm_password']
@@ -42,11 +42,12 @@ class RegisterView(CreateAPIView):
             'username': username,
             'email': email,
             'password': password,
+            'confirmation_code': confirmation_code
         }
 
-        cache.set(email, confirm_password, timeout=300)
+        cache.set(email, cache_data, timeout=300)
         send_email.delay(email, confirmation_code)
-        return Response({'success': True}, status=status.HTTP_201_CREATED)
+        return Response({'confirm_code': confirmation_code}, status=status.HTTP_201_CREATED)
 
 
 class ConfirmationCodeAPIView(GenericAPIView):
@@ -57,17 +58,17 @@ class ConfirmationCodeAPIView(GenericAPIView):
         confirm_code = request.data.get('confirm_code')
         cashed_data = cache.get(email)
 
-        if cashed_data and confirm_code == cashed_data['confirmation_code']:
-            first_name = cashed_data['first_name']
-            last_name = cashed_data['last_name']
-            username = cashed_data['username']
-            password = cashed_data['password']
+        if cashed_data and confirm_code == cashed_data.get('confirmation_code'):
+            first_name = cashed_data.get('first_name')
+            last_name = cashed_data.get('last_name')
+            username = cashed_data.get('username')
+            password = cashed_data.get('password')
 
-            if User.objects.filter(email=email).earliest():
+            if User.objects.filter(email=email).exists():
                 return Response({'success': False, 'message': 'This email already exists!'},
                                 status.HTTP_400_BAD_REQUEST)
             if User.objects.filter(username=username).exists():
-                return Response({'success': False, 'message': 'This username already exists! '})
+                return Response({'success': False, 'message': 'This username already exists!'})
             else:
                 user = User.objects.create_user(
                     first_name=first_name,
@@ -77,7 +78,7 @@ class ConfirmationCodeAPIView(GenericAPIView):
                 )
                 return Response({'success': True})
         else:
-            return Response({'message': 'The entered code is not valid !'}, status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'The entered code is not valid!'}, status.HTTP_400_BAD_REQUEST)
 
 
 class PasswordResetRequestView(GenericAPIView):
@@ -118,9 +119,6 @@ class PasswordResetView(GenericAPIView):
             else:
                 return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 class UserInfo(APIView):

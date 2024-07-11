@@ -97,6 +97,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_CACHE_BACKEND': 'django.core.cache.backends.django_redis.RedisCache',
+    'DEFAULT_CACHE_ALIAS': 'default',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        }
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -117,11 +136,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
-# CELERY_BROKER_URL = 'redis://localhost:6379/1'
-# CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = TIME_ZONE
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ahmatovdilshodbek@gmail.com'
+EMAIL_HOST_PASSWORD = 'qqiomfkiqsoxmsie'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
