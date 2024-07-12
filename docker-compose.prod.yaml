@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   web:
@@ -27,3 +27,4 @@ services:
 volumes:
   media_file:
   static_file:
+
