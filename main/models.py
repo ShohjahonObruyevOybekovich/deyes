@@ -16,6 +16,7 @@ class Movie(models.Model):
     description = models.TextField()
     categories = models.ManyToManyField(Category, related_name='movies')
     movie_janr = models.ManyToManyField(MovieJanr, related_name='movies')
+    movie_telegram_code  = models.CharField(max_length=100, blank=True,null=True)
     movie_file = models.FileField(upload_to='movies/', blank=True, null=True)
     davlati = models.FloatField(blank=True, null=True)
     language =models.CharField(max_length=100)
