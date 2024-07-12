@@ -13,7 +13,7 @@ DEBUG = True
 AUTH_USER_MODEL = 'account.CustomUser'
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
