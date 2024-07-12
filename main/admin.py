@@ -1,3 +1,14 @@
 from django.contrib import admin
+from .models import Movie, Trailer, Photo, Category,MovieJanr
 
-# Register your models here.
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ('title', 'release_date', 'created_at', 'updated_at')
+    list_filter = ('release_date', 'categories')
+    search_fields = ('title', 'description')
+    filter_horizontal = (['categories','movie_janr'])
+
+admin.site.register(Movie, MovieAdmin)
+admin.site.register(Trailer)
+admin.site.register(Photo)
+admin.site.register(Category)
+admin.site.register(MovieJanr)
