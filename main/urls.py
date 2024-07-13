@@ -8,4 +8,6 @@ urlpatterns = [
     path('Photo-get/', PhotoAPIView.as_view(), name='photo-get'),
 
     path('Category-get/', CategoryAPIView.as_view(), name='category-get'),
+    path('search-category/', CategorySearch.as_view(), name='cearch_category'),
+    path('movie-search/', MovieSearch.as_view(), name='movie_search'),
 ]
