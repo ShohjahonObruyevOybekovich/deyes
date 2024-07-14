@@ -1,33 +1,15 @@
-version: '3'
-
-services:
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: yourdbname
-      POSTGRES_USER: yourdbuser
-      POSTGRES_PASSWORD: yourdbpassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-  web:
-    build: .
-    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - .:/app
-    expose:
-      - "8000"
-    depends_on:
-      - db
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./static:/app/static
-      - ./media:/app/media
-    depends_on:
-      - web
+version: '3.8'
 
 volumes:
-  postgres_data:
+  media_file:
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - media_file:/app/media
+    environment:
+      - TZ=Asia/Tashkent

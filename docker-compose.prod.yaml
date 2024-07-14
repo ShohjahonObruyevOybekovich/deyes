@@ -27,4 +27,3 @@ services:
 volumes:
   media_file:
   static_file:
-
