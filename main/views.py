@@ -1,47 +1,65 @@
-from rest_framework import viewsets, filters, permissions
-from rest_framework.generics import ListAPIView, UpdateAPIView
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.openapi import Response
+from rest_framework import viewsets, filters, permissions, status
+from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
-from .models import Movie, Trailer, Photo, Category
-from .serializers import MovieSerializer, TrailerSerializer, PhotoSerializer, CategorySerializer
+from .models import Movie, Trailer
+from .serializers import MovieSerializer, TrailerSerializer
 
-class MovieMenuAPIView(ListAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-    permission_classes = (IsAuthenticated,)
-    # authentication_classes = (TokenAuthentication,)
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'description', 'categories__name']
+# class MovieMenuAPIView(ListAPIView):
+#
+#     queryset = Movie.objects.all()
+#     serializer_class = CustomMovieSerializer
 
 class TrailerAPIView(ListAPIView):
     queryset = Trailer.objects.all()
     serializer_class = TrailerSerializer
 
 
-class PhotoAPIView(ListAPIView):
-    queryset = Photo.objects.all()
-    serializer_class = PhotoSerializer
+# class PhotoAPIView(ListAPIView):
+#     queryset = Photo.objects.all()
+#     serializer_class = PhotoSerializer
 
-class CategoryAPIView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-class CategorySearch(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+# class CategoryAPIView(ListAPIView):
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+#
+# class CategorySearch(ListAPIView):
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['name']
 
 class MovieSearch(ListAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'movie_janr__name', 'davlati']
+    search_fields = ['title', 'description','movie_file','movie_janr__name', 'davlati','categories']
 
     def get_queryset(self):
         queryset = super().get_queryset()
         genre_name = self.request.query_params.get('genre_name')
         if genre_name:
             queryset = queryset.filter(movie_janr__name__icontains=genre_name)
+        return queryset
+class MovieDetailAPIView(RetrieveAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    # permission_classes = (IsAuthenticated,)
+
+
+class MoviebyCategorySearch(ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['categories']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_name = self.request.query_params.get('category_name')
+        if category_name:
+            queryset = queryset.filter(categories__icontains=category_name)
         return queryset
