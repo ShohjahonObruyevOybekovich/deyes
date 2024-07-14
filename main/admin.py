@@ -9,6 +9,6 @@ class MovieAdmin(admin.ModelAdmin):
 
 admin.site.register(Movie, MovieAdmin)
 admin.site.register(Trailer)
-# admin.site.register(Photo)
+# admin.site.register(Premyera)
 # admin.site.register(Category)
 admin.site.register(MovieJanr)

@@ -1,37 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.openapi import Response
-from rest_framework import viewsets, filters, permissions, status
-from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
+from rest_framework import filters
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from .models import Movie, Trailer
 from .serializers import MovieSerializer, TrailerSerializer
 
 
-# class MovieMenuAPIView(ListAPIView):
-#
-#     queryset = Movie.objects.all()
-#     serializer_class = CustomMovieSerializer
-
 class TrailerAPIView(ListAPIView):
     queryset = Trailer.objects.all()
     serializer_class = TrailerSerializer
-
-
-# class PhotoAPIView(ListAPIView):
-#     queryset = Photo.objects.all()
-#     serializer_class = PhotoSerializer
-
-# class CategoryAPIView(ListAPIView):
-#     queryset = Category.objects.all()
-#     serializer_class = CategorySerializer
-#
-# class CategorySearch(ListAPIView):
-#     queryset = Category.objects.all()
-#     serializer_class = CategorySerializer
-#     filter_backends = [filters.SearchFilter]
-#     search_fields = ['name']
 
 class MovieSearch(ListAPIView):
     queryset = Movie.objects.all()
@@ -49,6 +26,7 @@ class MovieDetailAPIView(RetrieveAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     # permission_classes = (IsAuthenticated,)
+
 
 
 class MoviebyCategorySearch(ListAPIView):

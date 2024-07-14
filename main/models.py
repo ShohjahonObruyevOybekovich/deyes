@@ -98,11 +98,5 @@ class Trailer(models.Model):
     def __str__(self):
         return f"Trailer for {self.movie.title}"
 
-# class Photo(models.Model):
-#     movie = models.ForeignKey(Movie, related_name='photos', on_delete=models.CASCADE)
-#
-#     # created_at = models.DateTimeField(auto_now_add=True)
-#     # updated_at = models.DateTimeField(auto_now=True)
-#
-#     def __str__(self):
-#         return f"Photo for {self.movie.title}"
+
+
